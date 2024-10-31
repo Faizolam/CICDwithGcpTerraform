@@ -3,7 +3,7 @@
 terraform {
   required_version = "~> 1.5"
   backend "gcs" {
-    bucket  = "dl-youtube-state"
+    bucket  = "backend-tf-stat"
     prefix  = "terraform/ep1"
   }
 }
