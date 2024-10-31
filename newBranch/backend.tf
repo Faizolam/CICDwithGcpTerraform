@@ -3,7 +3,7 @@
 terraform {
   required_version = "~> 1.5"
   backend "gcs" {
-    bucket  = "backend-tf-stat"
+    bucket  = "git-backend-tfstate"
     prefix  = "terraform/ep1"
   }
 }
