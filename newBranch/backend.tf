@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "google" {
-  #project = "dl-k8s-dev1cade"
+  project = var.project_id
 }
 
 

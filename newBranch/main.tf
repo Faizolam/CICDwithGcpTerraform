@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "bucket" {
-  project  = "dl-k8s-dev1cade"
+  # project  = "prime-team-434403-p9"
   name     = "daslearning-bucket-23"
   location = "ASIA-SOUTH1"
 }
