@@ -7,3 +7,4 @@
 crash.log
 terraform.rc
 /test.tf
+/variables.tf
