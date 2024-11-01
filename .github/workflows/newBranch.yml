@@ -1,0 +1,66 @@
+# This Pipeline will manage CloudRun deployment via Terraform
+
+name: 'CICD NewBranch'
+# what are branches and path, files i want to trigger
+on:
+  push:
+    branches:
+      - 'main'
+      - 'newBranch'
+    paths:
+      - 'newBranch/**'
+
+concurrency: ${{ github.repository }}
+
+# Jobs it is the collection of steps
+jobs:
+  newBranch_cicd:
+    name: 'CICD Job newBranch'
+    runs-on: 'ubuntu-latest'
+
+    steps:
+
+      - name: GIT Checkout
+        id: 'git-checkout'
+        uses: "actions/checkout@v4"
+
+      - name: Terraform Init
+        id: 'tf-init'
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.EP_KEY1 }}
+        run: |
+          cd ./newBranch
+          terraform init
+          pwd
+
+      - name: Terraform Plan
+        id: 'tf-plan'
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.EP_KEY1 }}
+        run: |
+          cd ./newBranch
+          terraform plan
+
+      - name: Terraform Apply
+        id: 'tf-apply'
+        if: |
+          github.ref == 'refs/heads/main'
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.EP_KEY1 }}
+        run: |
+          cd ./newBranch
+          terraform apply --auto-approve
+
+      - name: Upload File
+        id: 'python-upload'
+        if: |
+          github.ref == 'refs/heads/main'
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.EP_KEY1 }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/cred.json
+        run: |
+          cd ./newBranch
+          echo -n "$GOOGLE_CREDENTIALS" > $GOOGLE_APPLICATION_CREDENTIALS
+          pip install gcloud
+          python gcsUpload.py
+          rm $GOOGLE_APPLICATION_CREDENTIALS
